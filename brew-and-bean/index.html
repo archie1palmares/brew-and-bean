@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brew & Bean — Café</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #faf6f1;
+      --cream:   #f2eade;
+      --card:    #ffffff;
+      --brown:   #3b2314;
+      --mid:     #7a4f2e;
+      --accent:  #c8763a;
+      --light:   #e8d5b7;
+      --muted:   #9c7c5e;
+      --text:    #2a1a0e;
+      --fhead:   'Playfair Display', serif;
+      --fbody:   'Jost', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--fbody);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--brown);
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 62px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo {
+      font-family: var(--fhead);
+      font-style: italic;
+      font-size: 1.4rem;
+      color: var(--light);
+      letter-spacing: .02em;
+    }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--light); text-decoration: none;
+      font-size: .88rem; font-weight: 400;
+      letter-spacing: .08em; text-transform: uppercase;
+      cursor: pointer; opacity: .7;
+      transition: opacity .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { opacity: 1; }
+    .nav-reserve {
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 4px;
+      padding: .45rem 1.2rem;
+      font-family: var(--fbody); font-size: .82rem;
+      font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+      cursor: pointer; transition: background .2s;
+    }
+    .nav-reserve:hover { background: #b36328; }
+
+    /* ── PAGES ── */
+    .page { display: none; }
+    .page.active { display: block; animation: rise .4s ease; }
+    @keyframes rise { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+
+    /* ══════════════ HOME ══════════════ */
+    .hero {
+      background: var(--brown);
+      color: var(--light);
+      padding: 5rem 2.5rem 4rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; text-align: center;
+      position: relative; overflow: hidden;
+      min-height: 420px;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 60% 40%, rgba(200,118,58,.25) 0%, transparent 70%);
+    }
+    .hero-tag {
+      font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-family: var(--fhead);
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      line-height: 1.1; font-weight: 900;
+      margin-bottom: 1rem; position: relative;
+    }
+    .hero h1 em { color: var(--accent); font-style: italic; }
+    .hero p {
+      color: rgba(232,213,183,.75); max-width: 480px;
+      font-size: 1rem; line-height: 1.7; margin-bottom: 2rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; }
+    .btn-warm {
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 4px;
+      padding: .75rem 1.8rem;
+      font-family: var(--fbody); font-size: .88rem;
+      font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+      cursor: pointer; transition: background .2s;
+    }
+    .btn-warm:hover { background: #b36328; }
+    .btn-ghost {
+      background: transparent; color: var(--light);
+      border: 1px solid rgba(232,213,183,.4);
+      border-radius: 4px; padding: .75rem 1.8rem;
+      font-family: var(--fbody); font-size: .88rem;
+      font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+      cursor: pointer; transition: border-color .2s;
+    }
+    .btn-ghost:hover { border-color: var(--light); }
+
+    .section { padding: 4rem 2.5rem; max-width: 1000px; margin: 0 auto; }
+    .section-tag {
+      font-size: .7rem; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: .5rem;
+    }
+    .section-title {
+      font-family: var(--fhead);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700; margin-bottom: 2rem;
+      color: var(--brown);
+    }
+
+    .specials-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .special-card {
+      background: var(--card);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 14px rgba(59,35,20,.08);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .special-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(59,35,20,.14); }
+    .card-img {
+      height: 130px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem;
+    }
+    .card-img.warm { background: #f5e4cc; }
+    .card-img.cool { background: #d6eadf; }
+    .card-img.sweet { background: #fde8e8; }
+    .card-img.toast { background: #fdf3d8; }
+    .card-body { padding: 1rem 1.1rem; }
+    .card-body h4 { font-family: var(--fhead); font-size: 1rem; font-weight: 700; margin-bottom: .3rem; }
+    .card-body p { color: var(--muted); font-size: .82rem; line-height: 1.5; }
+    .card-price { color: var(--accent); font-weight: 500; font-size: .9rem; margin-top: .5rem; }
+
+    .about-strip {
+      background: var(--brown); color: var(--light);
+      padding: 3.5rem 2.5rem;
+      display: flex; gap: 3rem; align-items: center;
+      flex-wrap: wrap;
+    }
+    .about-strip .big-icon { font-size: 4rem; flex-shrink: 0; }
+    .about-strip h2 { font-family: var(--fhead); font-size: 1.8rem; margin-bottom: .7rem; }
+    .about-strip p { color: rgba(232,213,183,.75); line-height: 1.7; max-width: 520px; font-size: .95rem; }
+
+    /* ══════════════ MENU ══════════════ */
+    .menu-section { padding: 3rem 2.5rem; max-width: 900px; margin: 0 auto; }
+    .menu-tabs { display: flex; gap: .5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .tab-btn {
+      background: var(--card); border: 1px solid var(--light);
+      border-radius: 4px; padding: .45rem 1.2rem;
+      color: var(--muted); font-size: .82rem; font-weight: 500;
+      letter-spacing: .06em; text-transform: uppercase;
+      cursor: pointer; transition: all .2s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--accent); border-color: var(--accent); color: #fff;
+    }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+    .menu-item {
+      background: var(--card); border: 1px solid var(--light);
+      border-radius: 8px; padding: 1.1rem 1.2rem;
+      display: flex; align-items: flex-start; gap: .9rem;
+      transition: border-color .2s;
+    }
+    .menu-item:hover { border-color: var(--accent); }
+    .menu-emoji { font-size: 1.8rem; flex-shrink: 0; margin-top: .1rem; }
+    .menu-info h4 { font-family: var(--fhead); font-size: .95rem; font-weight: 700; margin-bottom: .25rem; }
+    .menu-info p { color: var(--muted); font-size: .8rem; line-height: 1.4; }
+    .menu-info .price { color: var(--accent); font-weight: 500; font-size: .88rem; margin-top: .4rem; }
+
+    /* ══════════════ CONTACT ══════════════ */
+    .contact-wrap {
+      max-width: 800px; margin: 0 auto; padding: 3.5rem 2.5rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+    }
+    .contact-info h2 { font-family: var(--fhead); font-size: 1.9rem; font-weight: 700; color: var(--brown); margin-bottom: 1.2rem; }
+    .info-row { display: flex; gap: .8rem; align-items: flex-start; margin-bottom: 1rem; }
+    .info-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: .1rem; }
+    .info-row h5 { font-size: .8rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: .2rem; }
+    .info-row p { font-size: .9rem; color: var(--text); line-height: 1.5; }
+
+    .contact-form h3 { font-family: var(--fhead); font-size: 1.3rem; font-weight: 700; color: var(--brown); margin-bottom: 1.2rem; }
+    .form-group { margin-bottom: .9rem; }
+    .form-group label { display: block; font-size: .75rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: .35rem; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; background: var(--card);
+      border: 1px solid var(--light); border-radius: 5px;
+      padding: .6rem .85rem; color: var(--text);
+      font-family: var(--fbody); font-size: .9rem;
+      outline: none; transition: border-color .2s; resize: vertical;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--accent); }
+    .form-group textarea { min-height: 90px; }
+
+    /* Toast */
+    #toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(60px);
+      background: var(--brown); color: var(--light);
+      border-radius: 6px; padding: .75rem 1.6rem;
+      font-size: .88rem; z-index: 999; opacity: 0;
+      transition: all .35s cubic-bezier(.34,1.56,.64,1);
+      pointer-events: none; white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* Footer */
+    footer {
+      background: var(--brown); color: rgba(232,213,183,.5);
+      text-align: center; padding: 1.5rem;
+      font-size: .78rem; letter-spacing: .05em;
+    }
+
+    @media(max-width: 640px) {
+      .contact-wrap { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-btns { flex-direction: column; align-items: center; }
+      nav { padding: 0 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Brew <span>&</span> Bean</div>
+  <ul class="nav-links">
+    <li><a onclick="show('home')" id="nav-home" class="active">Home</a></li>
+    <li><a onclick="show('menu')" id="nav-menu">Menu</a></li>
+    <li><a onclick="show('contact')" id="nav-contact">Contact</a></li>
+  </ul>
+  <button class="nav-reserve" onclick="show('contact')">Reserve a Table</button>
+</nav>
+
+<div id="toast"></div>
+
+<!-- ══ HOME ══ -->
+<div id="page-home" class="page active">
+
+  <div class="hero">
+    <div class="hero-tag">Est. 2018 · Cebu City</div>
+    <h1>Where Every Cup<br>Tells a <em>Story</em></h1>
+    <p>Handcrafted coffee, freshly baked goods, and a warm corner to call yours — morning, noon, or night.</p>
+    <div class="hero-btns">
+      <button class="btn-warm" onclick="show('menu')">View Our Menu</button>
+      <button class="btn-ghost" onclick="show('contact')">Find Us</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-tag">Today's Picks</div>
+    <div class="section-title">Featured Specials</div>
+    <div class="specials-grid">
+      <div class="special-card">
+        <div class="card-img warm">☕</div>
+        <div class="card-body">
+          <h4>Caramel Latte</h4>
+          <p>Smooth espresso with buttery caramel and steamed milk.</p>
+          <div class="card-price">₱150</div>
+        </div>
+      </div>
+      <div class="special-card">
+        <div class="card-img cool">🧋</div>
+        <div class="card-body">
+          <h4>Matcha Milk Tea</h4>
+          <p>Ceremonial grade matcha blended with creamy oat milk.</p>
+          <div class="card-price">₱165</div>
+        </div>
+      </div>
+      <div class="special-card">
+        <div class="card-img sweet">🍰</div>
+        <div class="card-body">
+          <h4>Basque Cheesecake</h4>
+          <p>Burnt top, creamy center — a Basque classic, daily baked.</p>
+          <div class="card-price">₱120</div>
+        </div>
+      </div>
+      <div class="special-card">
+        <div class="card-img toast">🥐</div>
+        <div class="card-body">
+          <h4>Butter Croissant</h4>
+          <p>Flaky, golden, straight from the oven every morning.</p>
+          <div class="card-price">₱85</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-strip">
+    <div class="big-icon">🫘</div>
+    <div>
+      <h2>Our Story</h2>
+      <p>Brew & Bean started as a small corner in Colon Street with one espresso machine and a dream. Today, we serve hundreds of cups daily — but every single one is still made with the same love and care as our very first.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ MENU ══ -->
+<div id="page-menu" class="page">
+  <div class="menu-section">
+    <div class="section-tag">What We Serve</div>
+    <div class="section-title" style="margin-bottom:1.5rem">Our Menu</div>
+    <div class="menu-tabs">
+      <button class="tab-btn active" onclick="filterMenu('all', this)">All</button>
+      <button class="tab-btn" onclick="filterMenu('coffee', this)">Coffee</button>
+      <button class="tab-btn" onclick="filterMenu('noncoffee', this)">Non-Coffee</button>
+      <button class="tab-btn" onclick="filterMenu('food', this)">Food</button>
+    </div>
+    <div class="menu-grid" id="menu-grid"></div>
+  </div>
+</div>
+
+<!-- ══ CONTACT ══ -->
+<div id="page-contact" class="page">
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <h2>Visit Us</h2>
+      <div class="info-row">
+        <div class="info-icon">📍</div>
+        <div>
+          <h5>Address</h5>
+          <p>123 Colon Street, Cebu City<br>Central Visayas, Philippines</p>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">🕐</div>
+        <div>
+          <h5>Hours</h5>
+          <p>Mon – Fri: 7:00 AM – 9:00 PM<br>Sat – Sun: 8:00 AM – 10:00 PM</p>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">📞</div>
+        <div>
+          <h5>Phone</h5>
+          <p>+63 912 345 6789</p>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon">✉️</div>
+        <div>
+          <h5>Email</h5>
+          <p>hello@brewandbean.ph</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <h3>Reserve a Table</h3>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="f-name" placeholder="e.g. Juan dela Cruz"/>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="f-email" placeholder="you@email.com"/>
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="f-date"/>
+      </div>
+      <div class="form-group">
+        <label>Number of Guests</label>
+        <select id="f-guests">
+          <option>1 person</option>
+          <option>2 people</option>
+          <option>3–4 people</option>
+          <option>5+ people</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Message (optional)</label>
+        <textarea id="f-msg" placeholder="Any special requests?"></textarea>
+      </div>
+      <button class="btn-warm" style="width:100%" onclick="submitForm()">Confirm Reservation</button>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 Brew & Bean Café · Cebu City, Philippines</footer>
+
+<script>
+  // ── NAV ──
+  function show(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.getElementById('nav-' + page).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ── TOAST ──
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // ── MENU DATA ──
+  const menuItems = [
+    { cat: 'coffee', emoji: '☕', name: 'Americano', desc: 'Bold espresso with hot water.', price: '₱110' },
+    { cat: 'coffee', emoji: '🥛', name: 'Cappuccino', desc: 'Equal parts espresso, steamed milk, foam.', price: '₱130' },
+    { cat: 'coffee', emoji: '🍮', name: 'Caramel Latte', desc: 'Espresso with caramel and steamed milk.', price: '₱150' },
+    { cat: 'coffee', emoji: '🧊', name: 'Iced Mocha', desc: 'Cold espresso, chocolate, and milk over ice.', price: '₱155' },
+    { cat: 'noncoffee', emoji: '🧋', name: 'Matcha Latte', desc: 'Oat milk and ceremonial grade matcha.', price: '₱165' },
+    { cat: 'noncoffee', emoji: '🍫', name: 'Hot Chocolate', desc: 'Rich Belgian cocoa with steamed milk.', price: '₱135' },
+    { cat: 'noncoffee', emoji: '🍵', name: 'Chamomile Tea', desc: 'Soothing floral tea, hot or iced.', price: '₱95' },
+    { cat: 'noncoffee', emoji: '🍓', name: 'Berry Smoothie', desc: 'Mixed berry blend with yogurt.', price: '₱170' },
+    { cat: 'food', emoji: '🥐', name: 'Butter Croissant', desc: 'Flaky, golden — baked fresh every morning.', price: '₱85' },
+    { cat: 'food', emoji: '🍰', name: 'Basque Cheesecake', desc: 'Creamy inside, caramelized top.', price: '₱120' },
+    { cat: 'food', emoji: '🥪', name: 'Club Sandwich', desc: 'Triple-decker with chicken, egg, and bacon.', price: '₱195' },
+    { cat: 'food', emoji: '🥣', name: 'Acai Bowl', desc: 'Acai blended base with fresh fruits and granola.', price: '₱210' },
+  ];
+
+  let activeFilter = 'all';
+
+  function filterMenu(cat, btn) {
+    activeFilter = cat;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderMenu();
+  }
+
+  function renderMenu() {
+    const filtered = activeFilter === 'all' ? menuItems : menuItems.filter(i => i.cat === activeFilter);
+    document.getElementById('menu-grid').innerHTML = filtered.map(i => `
+      <div class="menu-item">
+        <div class="menu-emoji">${i.emoji}</div>
+        <div class="menu-info">
+          <h4>${i.name}</h4>
+          <p>${i.desc}</p>
+          <div class="price">${i.price}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+  renderMenu();
+
+  // ── CONTACT FORM ──
+  function submitForm() {
+    const name  = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const date  = document.getElementById('f-date').value;
+    if (!name)  { toast('Please enter your name.'); return; }
+    if (!email) { toast('Please enter your email.'); return; }
+    if (!date)  { toast('Please pick a date.'); return; }
+    // clear form
+    ['f-name','f-email','f-date','f-msg'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-guests').selectedIndex = 0;
+    toast(`🎉 Thanks, ${name}! Your reservation is confirmed.`);
+  }
+</script>
+</body>
+</html>
